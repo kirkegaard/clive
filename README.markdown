@@ -1,5 +1,5 @@
 #Clive, the dushbag framework
-![Clive, the dushbag framework](http://imgur.com/V9tE6.jpg)
+![Clive, the dushbag framework](http://i.imgur.com/V9tE6.jpg)
 
 Yet another Sinatra.rb clone for PHP5.3
 
