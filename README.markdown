@@ -3,6 +3,32 @@
 
 Yet another Sinatra.rb clone for PHP5.3
 
+##Usage
+
+All you need to do is include the Clive library and add routes via the `addRoute` method. The method takes a request type, a route, and a function. Last you need to run the library and thats it.
+
+###Howto
+
+    require 'library/Clive.php';
+    
+    $clive = new Clive();
+    
+    $clive->addRoute('GET', '/', function() {
+        print 'A GET request for / was called';
+    });
+    
+    $clive->addRoute('GET', '/:name', function($request) {
+        print '/ was called with ' . $request->getParam('name');
+    });
+    
+    $clive->run();
+
+##Todo
+
+ * Add templating like phtml, mustache and so on.
+ * Better param handeling
+ * Better routing to support regex, *, and defaults
+
 ##Changelog
 
 ###Version 0.0.2 - 3th January

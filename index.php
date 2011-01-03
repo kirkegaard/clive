@@ -4,8 +4,12 @@ require 'library/Clive.php';
 
 $c = new Clive();
 
-$c->addRoute('GET', '/', function() {
-    print 'Get route called';
+$c->addRoute('GET', '/', function($request) {
+    var_dump($request->getAllParams());
+});
+
+$c->addRoute('GET', '/:name', function($request) {
+    print 'Name is: ' . $request->getParam('name');
 });
 
 $c->addRoute('DELETE', '/', function() {
@@ -16,14 +20,13 @@ $c->addRoute('PUT', '/', function() {
     print 'Put route called';
 });
 
-$c->addRoute('POST', '/', function() {
+$c->addRoute('POST', '/', function($request) {
     print 'Post route called';
+    var_dump($request->getAllParams());
 });
 
-$c->addRoute('GET', '/blog/:year/:month/:day/', function($c) {
-    print 'Year param is : ' . $c->getParam('year', 'No year found') . '<br>';
-    print 'Month param is : ' . $c->getParam('month', 'No month found') . '<br>';
-    print 'Day param is : ' . $c->getParam('day', 'No day found');
+$c->addRoute('GET', '/blog/:year/:month/:day/', function($request) {
+    var_dump($request->getAllParams());
 });
 
-$c->route();
+$c->run();
