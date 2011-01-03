@@ -53,11 +53,37 @@ class Clive {
      */
     protected $_params = array();
 
+    public function __construct($options = array())
+    {
+        $this->setRequest($_SERVER['REQUEST_URI']);
+        $this->setMethod($_SERVER['REQUEST_METHOD']);
+    }
+
     public function call()
     {}
     
     public function route()
-    {}
+    {
+        $method  = $this->getMethod();
+        $request = $this->getRequest();
+
+        foreach($this->_routes[$method] as $route => $function) {
+            preg_match_all('/:([a-zA-Z0-9]+)/', $route, $paramNames);
+            $regex_route = preg_replace('/(:[a-zA-Z0-9]+)/', "([a-zA-Z0-9]+)", $route);
+            $paramNames = $paramNames[1];
+
+            if(preg_match("~^$regex_route$~", $request, $paramValues)){
+                array_shift($paramValues);
+                if(isset($paramValues)) {
+                    foreach($paramValues as $key => $value) {
+                        $this->setParam($paramNames[$key], $value);
+                    }
+                }
+
+                $function($this);
+            }
+        }
+    }
 
     public function render()
     {}
@@ -72,7 +98,7 @@ class Clive {
      */
     public function addRoute($method, $route, $function)
     {
-        $this->_routes[$method][$route] = $function;
+        $this->_routes[strtoupper($method)][$route] = $function;
         return $this;
     }
 
@@ -85,10 +111,10 @@ class Clive {
      */
     public function getParam($param, $default)
     {
-        if(!$this->_param[$param]) {
+        if(!isset($this->_params[$param])) {
             return $default;
         }
-        return $this->_param[$param];
+        return $this->_params[$param];
     }
 
     /**
@@ -100,8 +126,19 @@ class Clive {
      */
     public function setParam($paramName, $paramValue)
     {
-        $this->_param[$paramName] = $paramValue;
+        $this->_params[$paramName] = $paramValue;
         return $this;
+    }
+
+    public function setRequest($request)
+    {
+        $this->_request = $request;
+        return $this;
+    }
+
+    public function getRequest()
+    {
+        return $this->_request;
     }
 
     /**
@@ -112,8 +149,17 @@ class Clive {
      */
     public function setMethod($method)
     {
-        $this->_method = strToUpper($method);
+        $this->_method = strtoupper($method);
         return $this;
+    }
+
+    public function getMethod()
+    {
+        return $this->_method;
+    }
+
+    public function run()
+    {
     }
 
     /**
