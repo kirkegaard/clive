@@ -5,6 +5,10 @@ Yet another Sinatra.rb clone for PHP5.3
 
 ##Changelog
 
+###Version 0.0.2 - 3th January
+
+ * Added proper routing. It listens! YEY
+
 ###Version 0.0.1 - 25th December
 
  * Initial import. Nothing works yet

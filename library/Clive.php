@@ -62,6 +62,14 @@ class Clive {
     public function call()
     {}
     
+    /**
+     * Parses the request and fires the function
+     * Some code borrowed off blaines Framework code
+     * @url https://github.com/blaines/Framework/blob/master/lib/framework.php
+     *
+     * @todo fix the regex to match * as well
+     * @todo add a notFound method call for when no route is found
+     */
     public function route()
     {
         $method  = $this->getMethod();

@@ -27,4 +27,3 @@ $c->addRoute('GET', '/blog/:year/:month/:day/', function($c) {
 });
 
 $c->route();
-
