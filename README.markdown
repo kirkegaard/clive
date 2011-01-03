@@ -33,7 +33,7 @@ All you need to do is include the Clive library and add routes via the `addRoute
 
 ###Version 0.0.2 - 3th January
 
- * Added proper routing. It listens! YEY
+ * Added proper routing. It works! YEY
 
 ###Version 0.0.1 - 25th December
 
