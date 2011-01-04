@@ -2,31 +2,35 @@
 
 require 'library/Clive.php';
 
-$c = new Clive();
+$clive = new Clive(array(
+    'template' => 'mustache'
+));
 
-$c->addRoute('GET', '/', function($request) {
+$clive->addRoute('GET', '/', function($request) {
     var_dump($request->getAllParams());
 });
 
-$c->addRoute('GET', '/:name', function($request) {
+$clive->addRoute('GET', '/:name', function($request) {
     print 'Name is: ' . $request->getParam('name');
 });
 
-$c->addRoute('DELETE', '/', function() {
+$clive->addRoute('DELETE', '/', function() {
     print 'Delete route called';
 });
 
-$c->addRoute('PUT', '/', function() {
+$clive->addRoute('PUT', '/', function() {
     print 'Put route called';
 });
 
-$c->addRoute('POST', '/', function($request) {
+$clive->addRoute('POST', '/', function($request) {
     print 'Post route called';
     var_dump($request->getAllParams());
 });
 
-$c->addRoute('GET', '/blog/:year/:month/:day/', function($request) {
-    var_dump($request->getAllParams());
-});
+$clive->addRoute('GET', '/blog/:year/:month/:day/', 
+    function($request) {
+        var_dump($request->getAllParams());
+    }
+);
 
-$c->run();
+$clive->run();

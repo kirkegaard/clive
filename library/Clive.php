@@ -36,6 +36,13 @@ class Clive {
     protected $_headers = array();
 
     /**
+     * Options
+     *
+     * @var array
+     */
+    protected $_options = array();
+
+    /**
      * Holds our roots
      *
      * @var array
@@ -48,21 +55,22 @@ class Clive {
     );
 
     /**
-     * Hold our params
+     * Holds GET, POST and url variables
      * @var array
      */
     protected $_params = array();
 
+    /**
+     * Setup our application.
+     */
     public function __construct($options = array())
     {
+        $this->setOptions($options);
         $this->setRequest($_SERVER['REQUEST_URI']);
         $this->setMethod($_SERVER['REQUEST_METHOD']);
         $this->setParams($params = array_merge($_POST, $_GET));
     }
 
-    public function call()
-    {}
-    
     /**
      * Parses the request and fires the function
      * Some code borrowed off blaines Framework code
@@ -94,6 +102,9 @@ class Clive {
         }
     }
 
+    /**
+     * Render
+     */
     public function render()
     {}
 
@@ -112,6 +123,18 @@ class Clive {
     }
 
     /**
+     * Sets the options for later
+     *
+     * @param array $options
+     * @return object
+     */
+    public function setOptions($options = array())
+    {
+        $this->_options = array_merge($this->_options, $options);
+        return $this;
+    }
+
+    /**
      * Returns a parameter from the request
      *
      * @param string $param
@@ -126,13 +149,18 @@ class Clive {
         return $this->_params[$param];
     }
 
+    /**
+     * Returns all the params in an array
+     *
+     * @return array
+     */
     public function getAllParams()
     {
         return $this->_params;
     }
 
     /**
-     * Sets a parameter value
+     * Sets a param and its value
      *
      * @param string $paramName
      * @param string $paramValue
@@ -158,15 +186,23 @@ class Clive {
         return $this;
     }
 
+    /**
+     * Splits up the request and takes the parts we want to save
+     *
+     * @param string $request
+     * @return object
+     */
     public function setRequest($request)
     {
-        // Remove GET params from the url
-        // We might want to use parse_url() instead
-        $req = preg_split('/[?]/', $request);
-        $this->_request = $req[0];
+        $this->_request = parse_url($request, PHP_URL_PATH);
         return $this;
     }
 
+    /**
+     * Returns the request
+     *
+     * @return string
+     */
     public function getRequest()
     {
         return $this->_request;
@@ -184,6 +220,12 @@ class Clive {
         return $this;
     }
 
+    /**
+     * Returns the method type. 
+     * GET, POST, PUT, DELETE
+     *
+     * @return string
+     */
     public function getMethod()
     {
         return $this->_method;
