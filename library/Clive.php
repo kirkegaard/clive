@@ -20,7 +20,7 @@ class Clive {
      * @var string
      */
     protected $_method = '';
-    
+
     /**
      * Response status code
      *
@@ -78,8 +78,10 @@ class Clive {
      *
      * @todo fix the regex to match * as well
      * @todo add a notFound method call for when no route is found
+     *
+     * @return string
      */
-    public function run()
+    public function route()
     {
         $method  = $this->getMethod();
         $request = $this->getRequest();
@@ -97,28 +99,59 @@ class Clive {
                     }
                 }
 
+                // can we somehow return a closure?
                 $function($this);
             }
+        }
+    }
+
+    public function run()
+    {
+        $this->route();
+
+        if($layout = $this->getOption('layout')) {
+            print 'Grapping: ' . $layout;
+        }
+
+        if($view = $this->getOption('view')) {
+            print 'Grapping: ' . $view;
         }
     }
 
     /**
      * Render
      */
-    public function render()
-    {}
+    public function render($data)
+    {
+        
+    }
+
+    /**
+     * Sets the view file for the method
+     *
+     * @param string $view
+     * @return object
+     */
+    public function setView($view)
+    {
+        $this->_options['view'] = $view;
+        return $this;
+    }
 
     /**
      * Add a route to the application
-     * 
+     *
      * @param string $method
      * @param string $route
      * @param function $function
      * @return object
      */
-    public function addRoute($method, $route, $function)
+    public function addRoute($method, $route, $function, $view = null)
     {
         $this->_routes[strtoupper($method)][$route] = $function;
+        if($view !== null) {
+            $this->setView($view);
+        }
         return $this;
     }
 
@@ -132,6 +165,33 @@ class Clive {
     {
         $this->_options = array_merge($this->_options, $options);
         return $this;
+    }
+
+    /**
+     * Sets an option and its value
+     *
+     * @param string $name
+     * @param string $value
+     * @return object
+     */
+    public function setOption($name, $value)
+    {
+        $this->_options[$name] = $value;
+        return $this;
+    }
+
+    /**
+     * returns an option from the options array
+     *
+     * @param string $option
+     * @return mixed
+     */
+    public function getOption($option)
+    {
+        if(!isset($this->_options[$option])) {
+            return false;
+        }
+        return $this->_options[$option];
     }
 
     /**

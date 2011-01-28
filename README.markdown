@@ -27,7 +27,7 @@ All you need to do is include the Clive library and add routes via the `addRoute
 
  * Add templating like phtml, mustache and so on.
  * Better param handeling
- * Better routing to support regex, *, and defaults
+ * Better routing to support regex, *, and defaults (http://kenai.com/projects/cms-codeigniter-rds/sources/cms-in-codeigniter/content/system/libraries/Router.php?rev=36)
 
 ##Changelog
 

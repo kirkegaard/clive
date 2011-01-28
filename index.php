@@ -3,16 +3,23 @@
 require 'library/Clive.php';
 
 $clive = new Clive(array(
-    'template' => 'mustache'
+    'layout'     => 'layout.phtml',
+    'layoutPath' => 'templates',
+    'viewPath'   => 'templates',
 ));
 
 $clive->addRoute('GET', '/', function($request) {
-    var_dump($request->getAllParams());
-});
+    print 'hello world';
+}, 'index.phtml');
 
 $clive->addRoute('GET', '/:name', function($request) {
-    print 'Name is: ' . $request->getParam('name');
-});
+    $request->render(array(
+        'name' => $request->getParam('name'),
+        'dataset' => array(
+            'foo', 'bar', 'flaf', 'giraf'
+        )
+    ));
+}, 'name.phtml');
 
 $clive->addRoute('DELETE', '/', function() {
     print 'Delete route called';
