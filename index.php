@@ -8,7 +8,7 @@ $clive = new Clive(array(
 ));
 
 $clive->addRoute('GET', '/', function($request) {
-    print 'hello world';
+    $request->setParam('foo', 'bar');
 }, 'index.phtml');
 
 $clive->addRoute('GET', '/:name', function($request) {
