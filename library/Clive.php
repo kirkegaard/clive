@@ -12,7 +12,7 @@ class Clive {
      *
      * @var string
      */
-    protected $_request = '';
+    protected $_request = array();
 
     /**
      * Method of the request
@@ -55,6 +55,11 @@ class Clive {
     );
 
     /**
+     * View data
+     */
+    protected $_viewOptions = array();
+
+    /**
      * Holds GET, POST and url variables
      * @var array
      */
@@ -66,7 +71,7 @@ class Clive {
     public function __construct($options = array())
     {
         $this->setOptions($options);
-        $this->setRequest($_SERVER['REQUEST_URI']);
+        $this->setRequest('uri', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
         $this->setMethod($_SERVER['REQUEST_METHOD']);
         $this->setParams($params = array_merge($_POST, $_GET));
     }
@@ -78,13 +83,14 @@ class Clive {
      *
      * @todo fix the regex to match * as well
      * @todo add a notFound method call for when no route is found
+     * @todo maybe not run `$function($this)` at this point?
      *
      * @return string
      */
     public function route()
     {
         $method  = $this->getMethod();
-        $request = $this->getRequest();
+        $request = $this->getRequest('uri');
 
         foreach($this->_routes[$method] as $route => $function) {
             preg_match_all('/:([a-zA-Z0-9]+)/', $route, $paramNames);
@@ -99,31 +105,50 @@ class Clive {
                     }
                 }
 
-                // can we somehow return a closure?
+                $this->setRequest('route', $route);
                 $function($this);
             }
         }
     }
 
+    /**
+     * RUN!
+     */
     public function run()
     {
         $this->route();
+        $route = $this->getRequest('route');
+
+        if($view = $this->getView($route)) {
+            $this->setParam('content', $this->render($view));
+        }
 
         if($layout = $this->getOption('layout')) {
-            print 'Grapping: ' . $layout;
+            $output = $this->render($layout);
         }
 
-        if($view = $this->getOption('view')) {
-            print 'Grapping: ' . $view;
-        }
+        print $output;
     }
 
     /**
-     * Render
+     * Renders the view
+     *
+     * @param string $view
      */
-    public function render($data)
+    public function render($view)
     {
-        
+        $template = $this->getOption('templatePath') . '/' . ltrim($view, '/');
+
+        if(!file_exists($template)) {
+            throw new Exception('Couldnt find template: ' . $template);
+        }
+
+        extract($this->getAllParams());
+
+        ob_start();
+        require $template;
+
+        return ob_get_clean();
     }
 
     /**
@@ -132,10 +157,15 @@ class Clive {
      * @param string $view
      * @return object
      */
-    public function setView($view)
+    public function setView($view, $route)
     {
-        $this->_options['view'] = $view;
+        $this->_viewOptions[$route] = $view;
         return $this;
+    }
+
+    public function getView($route)
+    {
+        return $this->_viewOptions[$route];
     }
 
     /**
@@ -150,7 +180,7 @@ class Clive {
     {
         $this->_routes[strtoupper($method)][$route] = $function;
         if($view !== null) {
-            $this->setView($view);
+            $this->setView($view, $route);
         }
         return $this;
     }
@@ -189,7 +219,7 @@ class Clive {
     public function getOption($option)
     {
         if(!isset($this->_options[$option])) {
-            return false;
+            return null;
         }
         return $this->_options[$option];
     }
@@ -252,9 +282,9 @@ class Clive {
      * @param string $request
      * @return object
      */
-    public function setRequest($request)
+    public function setRequest($key, $value)
     {
-        $this->_request = parse_url($request, PHP_URL_PATH);
+        $this->_request[$key] = $value;
         return $this;
     }
 
@@ -263,9 +293,12 @@ class Clive {
      *
      * @return string
      */
-    public function getRequest()
+    public function getRequest($option)
     {
-        return $this->_request;
+        if(!isset($this->_request[$option])) {
+            return null;
+        }
+        return $this->_request[$option];
     }
 
     /**
