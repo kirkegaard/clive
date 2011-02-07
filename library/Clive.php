@@ -72,6 +72,7 @@ class Clive {
     {
         $this->setOptions($options);
         $this->setRequest('uri', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+        $this->setRequest('found', false);
         $this->setMethod($_SERVER['REQUEST_METHOD']);
         $this->setParams($params = array_merge($_POST, $_GET));
     }
@@ -98,6 +99,7 @@ class Clive {
             $paramNames = $paramNames[1];
 
             if(preg_match("~^$regex_route$~", $request, $paramValues)){
+                $this->setRequest('found', true);
                 array_shift($paramValues);
                 if(isset($paramValues)) {
                     foreach($paramValues as $key => $value) {
@@ -109,6 +111,15 @@ class Clive {
                 $function($this);
             }
         }
+
+        if(!$found = $this->getRequest('found')) {
+            $this->_notfound();
+        }
+    }
+
+    protected function _notfound()
+    {
+        throw new Exception('No route found');
     }
 
     /**
@@ -165,6 +176,9 @@ class Clive {
 
     public function getView($route)
     {
+        if(!isset($this->_viewOptions[$route])) {
+            return null;
+        }
         return $this->_viewOptions[$route];
     }
 
