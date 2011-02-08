@@ -78,7 +78,7 @@ class Clive {
             $uri = empty($uri) ? '/' : $uri;
         }
 
-        $this->setRequest('uri', rtrim($uri, '/'));
+        $this->setRequest('uri', $uri);
         $this->setRequest('found', false);
         $this->setMethod($_SERVER['REQUEST_METHOD']);
         $this->setParams($params = array_merge($_POST, $_GET));
