@@ -1,5 +1,5 @@
 #Clive, the douchebag framework
-![Clive, the douchebag framework](http://i.imgur.com/V9tE6.jpg)
+![Clive, the douchebag framework](https://github.com/ranza/clive/raw/master/clive.jpg)
 
 Yet another Sinatra.rb clone for PHP5.3
 
