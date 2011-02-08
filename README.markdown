@@ -31,6 +31,12 @@ All you need to do is include the Clive library and add routes via the `addRoute
 
 ##Changelog
 
+###Version 0.0.3 - 8th February
+
+ * Added support for basePaths
+ * Some basic templating stuff
+ * Throws exception on 404 (will be changed to a template later on)
+
 ###Version 0.0.2 - 3th January
 
  * Added proper routing. It works! YEY
