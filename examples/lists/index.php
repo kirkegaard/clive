@@ -1,8 +1,7 @@
 <?php
 
 require '../../library/Clive.php';
-
-$database = 'data/db.sdb';
+require 'library/Lists.php';
 
 $clive = new Clive(array(
     'basePath'     => '/examples/lists/',
@@ -10,32 +9,17 @@ $clive = new Clive(array(
     'templatePath' => 'templates',
 ));
 
+$lists = new Lists(array(
+    'dsn' => 'sqlite:data/database.db'
+));
 
-$clive->addRoute('GET', '/', function($req) {
-    print 'slash!';
-});
+$clive->addRoute('GET', '/', function($req) use ($lists) {
+    $req->setParam('lists', $lists->getLists());
+}, 'index.phtml');
 
-
-$clive->addRoute('GET', '/list', function($req) {
-    var_dump('view lists');
-});
-
-$clive->addRoute('POST', '/list/add', function($req) {
-    var_dump('add list');
-});
-
-$clive->addRoute('GET', '/list/edit/:id', function($req) {
-    var_dump('edit list');
-});
-
-$clive->addRoute('PUT', '/list/update/:id', function($req) {
-    var_dump('updating list...');
-});
-
-$clive->addRoute('DELETE', '/list/delete/:id', function($req) {
-    var_dump('delete list');
-});
-
+$clive->addRoute('GET', '/show/:id', function($req) {
+    print $req->getParam('id');
+}, 'show.phtml');
 
 
 
@@ -54,7 +38,7 @@ CREATE TABLE "items" (
 "added" INTEGER );
 SQL;
 
-    $db = new PDO('sqlite:data/database.db');
+    $db = new PDO();
     $db->exec($schema);
 });
 
