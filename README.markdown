@@ -1,5 +1,5 @@
 #Clive, the douchebag framework
-![Clive, the douchebag framework](http://i.imgur.com/V9tE6.jpg)
+![Clive, the douchebag framework](https://github.com/ranza/clive/raw/master/clive.jpg)
 
 Yet another Sinatra.rb clone for PHP5.3
 
@@ -30,6 +30,12 @@ All you need to do is include the Clive library and add routes via the `addRoute
  * Better routing to support regex, *, and defaults (http://kenai.com/projects/cms-codeigniter-rds/sources/cms-in-codeigniter/content/system/libraries/Router.php?rev=36)
 
 ##Changelog
+
+###Version 0.0.3 - 8th February
+
+ * Added support for basePaths
+ * Some basic templating stuff
+ * Throws exception on 404 (will be changed to a template later on)
 
 ###Version 0.0.2 - 3th January
 

@@ -5,7 +5,7 @@ class Clive {
     /**
      * Current version
      */
-    const VERSION = '0.0.2';
+    const VERSION = '0.0.3';
 
     /**
      * The requested path
@@ -71,7 +71,14 @@ class Clive {
     public function __construct($options = array())
     {
         $this->setOptions($options);
-        $this->setRequest('uri', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+
+        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        if($basePath = $this->getOption('basePath')) {
+            $uri = str_replace(rtrim($basePath, '/'), '', $uri);
+            $uri = empty($uri) ? '/' : $uri;
+        }
+
+        $this->setRequest('uri', $uri);
         $this->setRequest('found', false);
         $this->setMethod($_SERVER['REQUEST_METHOD']);
         $this->setParams($params = array_merge($_POST, $_GET));
